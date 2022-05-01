@@ -1,4 +1,4 @@
-const { verifySubject } = require("../middlewares");
+const { verifySubject, validator } = require("../middlewares");
 const controller = require("../controllers/subject.controller");
 const authJwt = require("../middlewares/auth-jwt");
 
@@ -16,7 +16,7 @@ module.exports = function (app) {
       authJwt.verifyToken,
       authJwt.isAdmin,
       ...verifySubject.createBodyValidators,
-      verifySubject.ValidateCreateBody,
+      validator.errorHandler,
       verifySubject.checkDuplicateSubject,
     ],
     controller.create

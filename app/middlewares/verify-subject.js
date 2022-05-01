@@ -1,5 +1,5 @@
 const db = require("../models");
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 
 const Subject = db.subject;
 
@@ -7,14 +7,6 @@ const createBodyValidators = [
   body("name").not().isEmpty().trim().escape(),
   body("stream").not().isEmpty().trim().escape(),
 ];
-
-const ValidateCreateBody = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
 
 const checkDuplicateSubject = (req, res, next) => {
   Subject.findOne({
@@ -38,5 +30,4 @@ const checkDuplicateSubject = (req, res, next) => {
 module.exports = {
   checkDuplicateSubject,
   createBodyValidators,
-  ValidateCreateBody,
 };

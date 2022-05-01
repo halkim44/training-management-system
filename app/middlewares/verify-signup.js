@@ -1,9 +1,16 @@
 const db = require("../models");
+const { body } = require("express-validator");
 
 const ROLES = db.ROLES;
 const User = db.user;
 
-checkDuplicateUsernameOrEmail = (req, res, next) => {
+const signupValidators = [
+  body("username").notEmpty().trim().escape(),
+  body("email").isEmail(),
+  body("password").isLength({ min: 8 }),
+];
+
+const checkDuplicateUsernameOrEmail = (req, res, next) => {
   User.findOne({
     username: req.body.username,
     ...(req?.userId?.length ? { _id: { $ne: req?.userId } } : {}),
@@ -54,5 +61,6 @@ checkRolesExisted = (req, res, next) => {
 const verifySignUp = {
   checkDuplicateUsernameOrEmail,
   checkRolesExisted,
+  signupValidators,
 };
 module.exports = verifySignUp;

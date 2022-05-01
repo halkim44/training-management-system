@@ -10,12 +10,6 @@ const courseRoutes = require("./app/routes/course.routes");
 
 const Role = db.role;
 
-const cors = require("cors");
-// var corsOptions = {
-//   origin: "http://localhost:8081"
-// };
-// app.use(cors(corsOptions));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
