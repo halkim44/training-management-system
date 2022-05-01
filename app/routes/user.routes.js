@@ -19,12 +19,9 @@ module.exports = function (app) {
     controller.signup
   );
   app.post("/api/user/signin", controller.signin);
-
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
-
-  app.get(
-    "/api/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
+  app.put(
+    "/api/user/update",
+    [authJwt.verifyToken, verifySignUp.checkDuplicateUsernameOrEmail],
+    controller.update
   );
 };

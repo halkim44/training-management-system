@@ -96,9 +96,23 @@ exports.signin = (req, res) => {
     });
 };
 
-exports.userBoard = (req, res) => {
-  res.status(200).send("User Content.");
-};
-exports.adminBoard = (req, res) => {
-  res.status(200).send("Admin Content.");
+exports.update = (req, res) => {
+  if (!Object.keys(req?.body)?.length) {
+    res
+      .status(500)
+      .send({ message: "Request Failed! please provide data to update!" });
+    return;
+  }
+  const { password, ...otherData } = req?.body;
+  const updateData = { ...otherData };
+  if (req.body?.password?.length) {
+    updateData.password = bcrypt.hashSync(req.body.password, 8);
+  }
+  User.findByIdAndUpdate(req.userId, updateData).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    res.send({ message: "User was updated successfully!" });
+  });
 };
