@@ -35,20 +35,6 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  const limit = parseInt(req?.query?.limit) || 10;
-  const page = parseInt(req?.query?.page) || 1;
-  const sort = req?.query?.sort || {};
-  let isSortInvalid = false;
-  Object.keys(sort).forEach((key) => {
-    sort[key] = parseInt(sort[key]);
-    if (![1, -1].includes(sort[key])) {
-      isSortInvalid = true;
-    }
-  });
-  if (isSortInvalid) {
-    res.status(404).send({ message: "Sort value is not valid!" });
-    return;
-  }
   const filter = req?.query?.filter || {};
   const subjectFilter = filter?.subject;
   const streamFilter = filter?.stream;
@@ -84,12 +70,7 @@ exports.getAll = async (req, res) => {
     });
   }
 
-  const courses = await Course.aggregate(aggregatePipe)
-    // .limit(limit)
-    // .skip((page - 1) * limit)
-    // .sort(sort)
-    // .populate("subjects")
-    .exec();
+  const courses = await Course.aggregate(aggregatePipe).exec();
 
   if (!courses?.length) {
     res.status(404).send({ message: " No courses Found!" });
@@ -97,7 +78,5 @@ exports.getAll = async (req, res) => {
   }
   res.send({
     courses,
-    limit,
-    page,
   });
 };
